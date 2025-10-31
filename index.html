@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>SLVLOG.LIVE ▸ One‑Page Biometric Launch</title>
+  <meta name="description" content="Single‑page red cyber portal: palm scan → user identified → dramatic launch animation → redirect to SLVLOG.LIVE. With subtle hacking‑style background music." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{ --primary:#ff1a1a; --accent:#ff4b4b; --text:#fff; --muted:#d39b9b; --glow:0 0 36px rgba(255,0,0,.7) }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;font-family:Rajdhani,system-ui,sans-serif;background:radial-gradient(circle at 50% 40%,#190000,#000 70%);color:var(--text);overflow:hidden}
+    canvas#matrix{position:fixed;inset:0;z-index:0;background:#000}
+    .grid{pointer-events:none;position:fixed;inset:0;z-index:1;background-image:linear-gradient(transparent 95%, rgba(255,50,50,.08) 95%),linear-gradient(90deg, transparent 95%, rgba(255,50,50,.08) 95%);background-size:20px 20px;mix-blend-mode:soft-light;opacity:.25;transform:skewY(-3deg)}
+
+    .stage{position:relative;z-index:2;display:none;place-items:center;height:100vh;padding:24px}
+    .stage.active{display:grid;animation:fadeIn .45s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.995)}to{opacity:1;transform:scale(1)}}
+
+    /* ===== Stage 1: SCAN ===== */
+    .card{width:min(980px,95vw);border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));box-shadow:0 10px 60px rgba(0,0,0,.5), var(--glow);backdrop-filter:blur(10px);border-radius:24px;overflow:hidden}
+    .head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(90deg, rgba(255,0,0,.16), transparent)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:34px;height:34px;border:2px solid var(--primary);border-radius:9px;display:grid;place-items:center;color:var(--primary);font-weight:900;font-family:Orbitron}
+    .badge{border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 10px;background:rgba(255,255,255,.06);font-size:12px;color:#ff8b8b}
+    .body{display:grid;grid-template-columns:1.1fr .9fr;min-height:500px}
+    @media (max-width:900px){.body{grid-template-columns:1fr}}
+    .left,.right{padding:24px}
+    h2{margin:0 0 4px;font-weight:800;letter-spacing:.06em;color:var(--primary)}
+    .sub{margin:0 0 18px;color:var(--muted)}
+    .idrow{display:grid;grid-template-columns:1fr 160px;gap:12px;margin:12px 0 22px}
+    label{font-size:12px;color:#ffb0b0;letter-spacing:.08em}
+    input[type=text]{height:46px;border:1px solid rgba(255,0,0,.28);background:rgba(30,0,0,.68);color:#fbe3e3;border-radius:12px;padding:0 14px;font-size:16px}
+    .btn{height:46px;border:none;border-radius:12px;background:linear-gradient(90deg, var(--primary), #ff4444);color:#fff;font-weight:900;letter-spacing:.06em;cursor:pointer;box-shadow:0 8px 26px rgba(255,0,0,.45)}
+
+    .pad{position:relative;border:1px dashed rgba(255,0,0,.55);border-radius:18px;min-height:320px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(280px 180px at 50% 60%, rgba(255,0,0,.12), transparent);touch-action:none;cursor:pointer}
+    .pad .hint{position:absolute;top:14px;left:14px;font-size:12px;color:var(--muted)}
+    .pad::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg, rgba(255,0,0,.0), rgba(255,0,0,.5), rgba(255,0,0,.0));animation:spin 6s linear infinite;mix-blend-mode:screen;opacity:.25;pointer-events:none;filter:blur(6px)}
+    .pad::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg, transparent 40%, rgba(255,255,255,.08) 50%, transparent 60%);transform:translateX(-140%);animation:shine 4.8s ease-in-out infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes shine{50%{transform:translateX(140%)}}
+
+    .hand{width:min(420px,86%);opacity:.9;filter:drop-shadow(0 0 14px rgba(255,0,0,.52))}
+    .hand.pulse{animation:pulse 1.2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+
+    .scanline{position:absolute;left:0;right:0;height:46px;background:linear-gradient(180deg, transparent, rgba(255,0,0,.38), transparent);box-shadow:0 0 28px rgba(255,0,0,.6);filter:blur(.3px);mix-blend-mode:screen;top:-46px}
+    .ring{position:absolute;inset:0;border:1px solid rgba(255,0,0,.28);border-radius:18px;box-shadow:inset 0 0 26px rgba(255,0,0,.18)}
+
+    .progress{height:16px;background:#300000;border-radius:999px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg, #660000, #ff1a1a, #ff5555, #660000);background-size:200% auto;position:relative}
+    .bar::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg, rgba(255,255,255,.18) 0 10px, rgba(255,255,255,0) 10px 20px);opacity:.6;mix-blend-mode:screen;animation:stripe 1s linear infinite}
+    @keyframes stripe{to{transform:translateX(20px)}}
+
+    .logbox{font-family:ui-monospace,monospace;background:rgba(15,0,0,.74);border:1px solid rgba(255,255,255,.08);border-radius:16px;height:100%;min-height:240px;padding:16px;overflow:auto}
+    .log{white-space:pre-wrap;color:#ffb8b8;font-size:13px;line-height:1.35}
+
+    /* ===== Stage 2 & 3: LAUNCH ===== */
+    .center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center}
+    h1.big{font-family:Orbitron, Rajdhani, sans-serif;font-size:clamp(48px,8vw,100px);letter-spacing:0.08em;color:var(--primary);text-shadow:0 0 35px rgba(255,0,0,.9),0 0 70px rgba(255,0,0,.5);animation:glowpulse 2.5s ease-in-out infinite;margin:0}
+    h2.sub{font-weight:700;font-size:clamp(22px,3vw,42px);color:var(--accent);margin:.2em 0 0;text-shadow:0 0 18px rgba(255,80,80,.8)}
+    @keyframes glowpulse{0%,100%{text-shadow:0 0 25px rgba(255,0,0,.8),0 0 50px rgba(255,0,0,.5)}50%{text-shadow:0 0 80px rgba(255,0,0,1),0 0 150px rgba(255,0,0,.8)}}
+    .scanlineXL{position:absolute;left:0;right:0;height:40px;background:linear-gradient(180deg,transparent,rgba(255,0,0,.4),transparent);filter:blur(1px);mix-blend-mode:screen;animation:scan 6s linear infinite}
+    @keyframes scan{0%{top:-40px}100%{top:100%}}
+
+    .barXL{position:relative;width:min(780px,80vw);height:20px;margin-top:40px;background:#300000;border-radius:10px;overflow:hidden;box-shadow:var(--glow)}
+    .fill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,#660000,#ff1a1a,#ff5555,#660000);background-size:220% auto;animation:fill 12s ease-in-out forwards, shimmer 1.4s linear infinite}
+    @keyframes fill{0%{width:0}50%{width:60%}100%{width:100%}}
+    @keyframes shimmer{0%{background-position:0% 0}100%{background-position:220% 0}}
+
+    .redirect{margin-top:22px;font-size:18px;color:#ffcccc;animation:fadein 1.4s ease forwards 9s;opacity:0}
+    @keyframes fadein{to{opacity:1}}
+
+    .idLine{margin-top:20px;font-family:Orbitron, sans-serif;font-weight:900;font-size:clamp(28px,4vw,60px);color:#ffffff;letter-spacing:.08em;text-shadow:0 0 28px rgba(255,0,0,.9),0 0 60px rgba(255,0,0,.6)}
+
+    /* Utility */
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div class="grid"></div>
+  <!-- Subtle hacking‑style background music (royalty‑free). Will unmute on first interaction. -->
+  <audio id="bgMusic" loop muted preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2bce79e8ee.mp3?filename=dark-hacker-mood-11059.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- ===== Stage 1: Palm Scan ===== -->
+  <section id="stage-scan" class="stage active">
+    <div class="card" role="main" aria-label="Biometric access portal">
+      <div class="head">
+        <div class="brand"><div class="logo">λ</div><div>
+          <div style="font-family:Orbitron, Rajdhani, sans-serif;letter-spacing:.08em">ACCESS PORTAL</div>
+          <div id="status" style="font-size:12px;color:var(--muted)">Awaiting user identification…</div>
+        </div></div>
+        <div class="badge">Build v3.1 ▸ Music + Fixes</div>
+      </div>
+      <div class="body">
+        <div class="left">
+          <h2>IDENTIFY YOURSELF</h2>
+          <p class="sub">Type your name, then touch & hold the pad (or tap once) to begin the simulated palm scan.</p>
+          <div class="idrow">
+            <div>
+              <label for="name">GUEST ID / NAME</label>
+              <input id="name" type="text" placeholder="e.g., Special Guest A" />
+            </div>
+            <button class="btn" id="begin" type="button">Begin Check</button>
+          </div>
+
+          <!-- Clickable/tappable/keyboard palm pad -->
+          <div class="pad" id="pad" role="button" tabindex="0" aria-label="Biometric pad">
+            <span class="hint">Touch & hold, tap, or press Space/Enter to scan</span>
+            <svg class="hand" id="hand" viewBox="0 0 400 500" aria-hidden="true">
+              <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff1a1a" stop-opacity=".25"/><stop offset="100%" stop-color="#ff4a4a" stop-opacity=".6"/></linearGradient></defs>
+              <path d="M210 40c-12 0-20 9-20 21v86c0 8-6 14-14 14s-14-6-14-14V61c0-12-8-21-20-21s-20 9-20 21v106c0 8-6 14-14 14s-14-6-14-14V90c0-12-9-21-21-21s-21 9-21 21v170c0 25 5 45 15 62l60 98c12 20 34 32 57 32h35c22 0 43-11 55-29l66-99c12-18 18-39 18-60v-70c0-12-9-21-21-21s-21 9-21 21v60c0 8-6 14-14 14s-14-6-14-14V61c0-12-8-21-20-21s-20 9-20 21v86c0 8-6 14-14 14s-14-6-14-14V61c0-12-8-21-20-21z" fill="url(#g)" stroke="#ff1a1a" stroke-opacity=".7" stroke-width="2"/>
+            </svg>
+            <div class="scanline" id="scanline"></div>
+            <div class="ring"></div>
+          </div>
+
+          <div class="progress" style="margin-top:14px"><div class="bar" id="bar"></div></div>
+        </div>
+        <div class="right">
+          <div class="logbox"><div class="log" id="log"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stage 2 & 3: Launch ===== -->
+  <section id="stage-launch" class="stage hidden">
+    <div class="center">
+      <div class="scanlineXL"></div>
+      <h1 class="big">NEW WEB LAUNCH INITIATED</h1>
+      <h2 class="sub">SLVLOG.LIVE</h2>
+      <div id="idLine" class="idLine hidden"></div>
+      <div class="barXL"><div class="fill" id="fill"></div></div>
+      <div class="redirect">Redirecting to the new experience…</div>
+    </div>
+  </section>
+
+  <script>
+    /* ===== Matrix background ===== */
+    (function(){const c=document.getElementById('matrix');const x=c.getContext('2d');const chars='01░▒▓█ΛΣΦΨΩ₪¥₩シツ';let col,drop,W,H;function resize(){W=c.width=innerWidth;H=c.height=innerHeight;col=Math.floor(W/16);drop=new Array(col).fill(0);}function step(){x.fillStyle='rgba(0,0,0,0.22)';x.fillRect(0,0,W,H);x.fillStyle='rgba(255,0,0,0.98)';x.font='16px monospace';for(let i=0;i<col;i++){if(Math.random()>0.96)continue;const t=chars[Math.floor(Math.random()*chars.length)];x.fillText(t,i*16,drop[i]*16);if(drop[i]*16>H&&Math.random()>0.975){drop[i]=0}drop[i]++;}requestAnimationFrame(step);}addEventListener('resize',resize,{passive:true});resize();step();})();
+
+    /* ===== Helpers ===== */
+    const $ = s => document.querySelector(s);
+    const sleep = ms => new Promise(r=>setTimeout(r,ms));
+    const log = (...a) => { const e=$('#log'); e.textContent += `\n${new Date().toLocaleTimeString()}  ${a.join(' ')}`; e.parentElement.scrollTop = e.parentElement.scrollHeight; };
+
+    /* ===== State ===== */
+    const state = { began:false, scanning:false, heldSince:0, minHold:900, scanMs:3200, launchMs:12000, autoScan:false };
+
+    const statusEl=$('#status');
+    const nameInput=$('#name');
+    const beginBtn=$('#begin');
+    const pad=$('#pad'), bar=$('#bar'), scanline=$('#scanline'), hand=$('#hand');
+    const music=$('#bgMusic');
+
+    function startMusic(){ if(!music) return; try{ music.muted=false; music.play(); }catch(e){} }
+
+    /* Begin button — sets began=true and focuses the pad */
+    beginBtn.addEventListener('click', ()=>{
+      const n=(nameInput.value||'Guest').trim();
+      state.began=true; statusEl.textContent='Hello, '+n+'. Place palm on pad to authenticate…';
+      log('IDENT:', n);
+      pad.focus();
+      startMusic();
+    });
+
+    /* Make Enter key on name field also start */
+    nameInput.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){ beginBtn.click(); }
+    });
+
+    /* Pointer-based hold (works on mouse and touch) */
+    pad.addEventListener('pointerdown', (e)=>{
+      if(!state.began || state.scanning) return;
+      pad.setPointerCapture(e.pointerId);
+      state.autoScan=false; // explicit hold mode
+      startMusic();
+      startHold(e);
+    });
+    pad.addEventListener('pointerup', (e)=>{
+      try{ pad.releasePointerCapture(e.pointerId); }catch{}
+      if(!state.began || state.scanning) return;
+      // If user just tapped quickly, switch to auto-scan so phones don't need to hold
+      const held = performance.now()-state.heldSince;
+      if(held < state.minHold){ startAutoScan(); }
+      else{ endHold(); }
+    });
+    pad.addEventListener('pointercancel', ()=>{ if(!state.scanning) endHold(); });
+
+    /* Keyboard access (Space/Enter triggers auto-scan) */
+    pad.addEventListener('keydown', (e)=>{
+      if(!state.began || state.scanning) return;
+      if(e.key===' ' || e.key==='Enter'){ e.preventDefault(); startMusic(); startAutoScan(); }
+    });
+
+    /* Also respond to click (for fast taps) */
+    pad.addEventListener('click', ()=>{
+      if(!state.began || state.scanning) return;
+      startMusic();
+      startAutoScan();
+    });
+
+    function startHold(ev){
+      state.heldSince=performance.now();
+      scanline.style.transition='none'; scanline.style.top='-46px'; scanline.style.display='block';
+      requestAnimationFrame(()=>{ scanline.style.transition=`top ${state.scanMs}ms linear`; scanline.style.top='100%'; });
+      hand.classList.add('pulse');
+      holdLoop();
+    }
+    function endHold(){ scanline.style.display='none'; bar.style.width='0%'; hand.classList.remove('pulse'); statusEl.textContent='Hold interrupted. Tap or hold again.'; log('Hold interrupted'); }
+
+    async function holdLoop(){
+      while(true){
+        await sleep(50);
+        const held=performance.now()-state.heldSince;
+        const pct=Math.min(100,Math.round((held/state.scanMs)*100));
+        bar.style.width=pct+'%';
+        if(held>state.minHold){ statusEl.textContent='Scanning palm topology… '+pct+'%'; }
+        if(held>=state.scanMs){ authenticate(); break; }
+        if(pad.matches(':active')===false){ break; }
+      }
+    }
+
+    /* Auto-scan for taps/clicks (fills bar without holding) */
+    async function startAutoScan(){
+      if(state.scanning) return;
+      hand.classList.add('pulse');
+      scanline.style.transition=`top ${state.scanMs}ms linear`; scanline.style.top='100%'; scanline.style.display='block';
+      const steps=Math.ceil(state.scanMs/40);
+      for(let i=0;i<=steps;i++){
+        await sleep(40);
+        const pct=Math.min(100,Math.round((i/steps)*100));
+        bar.style.width=pct+'%'; statusEl.textContent='Scanning palm topology… '+pct+'%';
+      }
+      authenticate();
+    }
+
+    async function authenticate(){
+      state.scanning=true;
+      statusEl.textContent='Analyzing liveness, heat map, ridge data…';
+      log('Biometric sample received. Running checks…');
+      await sleep(650); log('Liveness: PASS'); await sleep(300); log('Topology: PASS'); await sleep(300); log('Spoofing: PASS'); await sleep(300); log('Entropy: HIGH');
+      const name=(nameInput.value||'Guest').trim();
+      statusEl.textContent='Identity bound ▸ '+name.toUpperCase();
+      await sleep(600);
+      goToLaunch(name);
+    }
+
+    /* ===== Transition to launch ===== */
+    function goToLaunch(name){
+      $('#stage-scan').classList.remove('active'); $('#stage-scan').classList.add('hidden');
+      $('#stage-launch').classList.remove('hidden'); $('#stage-launch').classList.add('active');
+      const idLine = $('#idLine');
+      idLine.textContent = 'User '+name+' identified — proceeding…';
+      idLine.classList.remove('hidden');
+      // Let the 12s fill animation play, then redirect
+      setTimeout(()=>{ location.href='https://slvlog.live'; }, state.launchMs + 200);
+    }
+  </script>
+</body>
+</html>
