@@ -1,0 +1,23 @@
+/* (same CSS as previous cell, trimmed for brevity in this comment)
+   Full CSS retained in file output. */
+:root{--primary:#ff1a1a;--accent:#ff4b4b;--text:#fff;--muted:#d39b9b;--bg:#000;--barbg:#300000;--glow:0 0 36px rgba(255,0,0,.7)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Rajdhani,system-ui,sans-serif;overflow:hidden}
+#matrix{position:fixed;inset:0;z-index:0;background:#000}.grid{pointer-events:none;position:fixed;inset:0;z-index:1;background-image:linear-gradient(transparent 95%, rgba(255,50,50,.08) 95%),linear-gradient(90deg, transparent 95%, rgba(255,50,50,.08) 95%);background-size:20px 20px;mix-blend-mode:soft-light;opacity:.25;transform:skewY(-3deg)}
+.stage{position:relative;z-index:2;display:none;place-items:center;height:100vh;padding:1rem}.stage.active{display:grid;animation:fade .35s ease both}@keyframes fade{from{opacity:0;transform:scale(.996)}to{opacity:1;transform:scale(1)}}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}.stack>*{margin:.15rem 0}
+.logo{width:200px;max-width:50vw;filter:drop-shadow(0 12px 40px rgba(255,0,0,.45))}.hero{margin-bottom:4vh}@media(min-width:600px){.logo{width:260px}}@media(min-width:1200px){.logo{width:340px}}
+.title{font-family:Orbitron, Rajdhani, sans-serif;font-weight:900;letter-spacing:.08em;font-size:clamp(2rem,6vw,4.2rem)}.subtitle{font-weight:700;font-size:clamp(1rem,3vw,2rem);color:#ffb0b0}.accent{color:var(--primary);text-shadow:0 0 35px rgba(255,0,0,.9),0 0 70px rgba(255,0,0,.5)}.brand{color:var(--accent);text-shadow:0 0 18px rgba(255,80,80,.8)}.muted{color:var(--muted)}
+.idForm{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:center}
+.idForm input{width:min(480px,80vw);height:48px;border:1px solid rgba(255,0,0,.28);background:rgba(30,0,0,.68);color:#fbe3e3;border-radius:12px;padding:0 14px;font-size:18px}
+.btn{height:48px;border:none;border-radius:12px;background:linear-gradient(90deg, var(--primary), #ff4444);color:#fff;font-weight:900;letter-spacing:.06em;cursor:pointer;box-shadow:0 8px 26px rgba(255,0,0,.45);padding:0 16px}
+.linkBtn{background:none;border:none;color:#ff8b8b;cursor:pointer;text-decoration:underline}
+.pad{position:relative;border:1px dashed rgba(255,0,0,.55);border-radius:18px;min-height:280px;width:min(720px,92vw);display:grid;place-items:center;overflow:hidden;background:radial-gradient(280px 180px at 50% 60%, rgba(255,0,0,.12), transparent);touch-action:manipulation;cursor:pointer;margin-top:8px}
+.padHint{position:absolute;top:12px;left:12px;font-size:12px;color:var(--muted)}
+.palm{width:min(420px,86%);max-width:300px;opacity:.9;filter:drop-shadow(0 0 14px rgba(255,0,0,.52))}
+.scanline{position:absolute;left:0;right:0;height:46px;background:linear-gradient(180deg, transparent, rgba(255,0,0,.38), transparent);box-shadow:0 0 28px rgba(255,0,0,.6);filter:blur(.3px);mix-blend-mode:screen;top:-46px;display:none}
+.ring{position:absolute;inset:0;border:1px solid rgba(255,0,0,.28);border-radius:18px;box-shadow:inset 0 0 26px rgba(255,0,0,.18)}.palm.pulse{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.progress{height:14px;background:#300000;border-radius:999px;border:1px solid rgba(255,255,255,.12);overflow:hidden;width:min(720px,92vw)}.bar{height:100%;width:0%;background:linear-gradient(90deg, #660000, #ff1a1a, #ff5555, #660000);background-size:220% auto;position:relative}.bar::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg, rgba(255,255,255,.18) 0 10px, rgba(255,255,255,0) 10px 20px);opacity:.6;mix-blend-mode:screen;animation:stripe 1s linear infinite}@keyframes stripe{to{transform:translateX(20px)}}
+.logbox{font-family:ui-monospace,monospace;background:rgba(15,0,0,.74);border:1px solid rgba(255,255,255,.08);border-radius:16px;min-height:120px;padding:12px;overflow:auto;width:min(720px,92vw);max-height:32vh}.log{white-space:pre-wrap;color:#ffb8b8;font-size:13px;line-height:1.35}
+.barXL{position:relative;width:min(780px,82vw);height:20px;margin-top:12px;background:#300000;border-radius:10px;overflow:hidden;box-shadow:var(--glow)}.fill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,#660000,#ff1a1a,#ff5555,#660000);background-size:220% auto;animation:shimmer 1.4s linear infinite}@keyframes shimmer{0%{background-position:0% 0}100%{background-position:220% 0}}
+.idLine{margin-top:6px;font-family:Orbitron, sans-serif;font-weight:900;font-size:clamp(1rem,3vw,2.2rem);color:#ffffff;letter-spacing:.08em;text-shadow:0 0 28px rgba(255,0,0,.9),0 0 60px rgba(255,0,0,.6)}
+.hidden{display:none !important}
